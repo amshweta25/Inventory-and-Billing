@@ -31,4 +31,22 @@ public class Product {
     public int getQuantity() {
         return quantity;
     }
+
+    // setter methods - used to update product details
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    // display product details in a nice format
+    public void displayProduct() {
+        System.out.println("Product ID: " + productId);
+        System.out.println("Name: " + productName);
+        System.out.println("Price: Rs. " + price);
+        System.out.println("Quantity: " + quantity);
+        System.out.println("---------------------------");
+    }
 }
