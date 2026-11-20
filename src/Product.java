@@ -14,4 +14,21 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
     }
+
+    // getter methods - used to access product details
+    public int getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }
