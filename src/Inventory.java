@@ -6,6 +6,9 @@ public class Inventory {
     // ArrayList to store all products
     ArrayList<Product> productList = new ArrayList<>();
 
+    // threshold for low stock warning
+    int lowStockLimit = 5;
+
     // method to add a new product to inventory
     public void addProduct(Product product) {
 
@@ -68,5 +71,28 @@ public class Inventory {
 
         // if product not found
         System.out.println("Product with ID " + productId + " not found!");
+    }
+
+    // method to display low stock alerts
+    public void lowStockAlert() {
+
+        System.out.println("\n===== LOW STOCK ALERTS =====");
+        System.out.println("Products with quantity less than " + lowStockLimit + ":");
+        System.out.println("---------------------------");
+
+        boolean found = false;
+
+        // check each product for low stock
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getQuantity() < lowStockLimit) {
+                productList.get(i).displayProduct();
+                found = true;
+            }
+        }
+
+        // if no low stock products found
+        if (!found) {
+            System.out.println("All products have sufficient stock!");
+        }
     }
 }
