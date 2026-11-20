@@ -21,4 +21,20 @@ public class Inventory {
         productList.add(product);
         System.out.println("Product added successfully!");
     }
+
+    // method to display all products in inventory
+    public void displayAllProducts() {
+
+        // check if inventory is empty
+        if (productList.size() == 0) {
+            System.out.println("No products in inventory!");
+            return;
+        }
+
+        System.out.println("\n===== ALL PRODUCTS IN INVENTORY =====");
+        // loop through all products and display them
+        for (int i = 0; i < productList.size(); i++) {
+            productList.get(i).displayProduct();
+        }
+    }
 }
