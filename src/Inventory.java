@@ -37,4 +37,20 @@ public class Inventory {
             productList.get(i).displayProduct();
         }
     }
+
+    // method to update stock quantity of a product
+    public void updateStock(int productId, int newQuantity) {
+
+        // search for the product by ID
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getProductId() == productId) {
+                productList.get(i).setQuantity(newQuantity);
+                System.out.println("Stock updated successfully!");
+                return;
+            }
+        }
+
+        // if product not found
+        System.out.println("Error: Product with ID " + productId + " not found!");
+    }
 }
