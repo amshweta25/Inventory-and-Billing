@@ -53,4 +53,20 @@ public class Inventory {
         // if product not found
         System.out.println("Error: Product with ID " + productId + " not found!");
     }
+
+    // method to search for a product using product ID
+    public void searchProduct(int productId) {
+
+        // loop through all products to find matching ID
+        for (int i = 0; i < productList.size(); i++) {
+            if (productList.get(i).getProductId() == productId) {
+                System.out.println("\n===== PRODUCT FOUND =====");
+                productList.get(i).displayProduct();
+                return;
+            }
+        }
+
+        // if product not found
+        System.out.println("Product with ID " + productId + " not found!");
+    }
 }
