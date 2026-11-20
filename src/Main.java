@@ -38,11 +38,28 @@ public class Main {
             switch (choice) {
 
                 case 1:
-                    System.out.println("Add Product - Coming Soon");
+                    // add new product
+                    System.out.print("Enter Product ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // clear the buffer
+
+                    System.out.print("Enter Product Name: ");
+                    String name = scanner.nextLine();
+
+                    System.out.print("Enter Price: ");
+                    double price = scanner.nextDouble();
+
+                    System.out.print("Enter Quantity: ");
+                    int qty = scanner.nextInt();
+
+                    // create new product and add to inventory
+                    Product newProduct = new Product(id, name, price, qty);
+                    inventory.addProduct(newProduct);
                     break;
 
                 case 2:
-                    System.out.println("Display Products - Coming Soon");
+                    // display all products
+                    inventory.displayAllProducts();
                     break;
 
                 case 3:
