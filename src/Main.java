@@ -63,15 +63,27 @@ public class Main {
                     break;
 
                 case 3:
-                    System.out.println("Update Stock - Coming Soon");
+                    // update stock quantity
+                    System.out.print("Enter Product ID to update: ");
+                    int updateId = scanner.nextInt();
+
+                    System.out.print("Enter new quantity: ");
+                    int newQty = scanner.nextInt();
+
+                    inventory.updateStock(updateId, newQty);
                     break;
 
                 case 4:
-                    System.out.println("Search Product - Coming Soon");
+                    // search product by ID
+                    System.out.print("Enter Product ID to search: ");
+                    int searchId = scanner.nextInt();
+
+                    inventory.searchProduct(searchId);
                     break;
 
                 case 5:
-                    System.out.println("Low Stock Alert - Coming Soon");
+                    // display low stock alerts
+                    inventory.lowStockAlert();
                     break;
 
                 case 6:
