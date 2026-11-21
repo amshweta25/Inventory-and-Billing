@@ -1,211 +1,147 @@
+// Team F: Inventory and Billing Manager
+// contains stock management, invoice generator, sales report and DSA algorithms
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*
- * Inventory class
- * ----------------
- * This class manages all the products in the inventory.
- * It uses:
- * - ArrayList to store products in order (Collections)
- * - HashMap for quick lookup of products by name (Collections)
- * - Custom exceptions for error handling
- *
- * Collections used: ArrayList, HashMap
- */
 public class Inventory {
+    // using java collections
+    ArrayList<Product> prodctList = new ArrayList<Product>();
+    HashMap<Integer, Product> prdMap = new HashMap<Integer, Product>();
+    ArrayList<String> allInvoics = new ArrayList<String>(); // saves past bills
+    
+    double totelRevenue = 0.0;
+    int invoiceNum = 101;
 
-    // ArrayList to store all products in order
-    private ArrayList<Product> productList;
-
-    // HashMap for quick search by product name
-    // Key = product name (lowercase), Value = product object
-    private HashMap<String, Product> productMap;
-
-    // threshold for low stock warning
-    private int lowStockLimit = 5;
-
-    // constructor - initializes the collections
-    public Inventory() {
-        productList = new ArrayList<>();
-        productMap = new HashMap<>();
+    // 1. add product to list
+    public void addProdct(Product p) {
+        prodctList.add(p);
+        prdMap.put(p.getItmId(), p);
+        System.out.println("Product added successfully!");
     }
 
-    /*
-     * Method to add a new product to inventory.
-     * Throws DuplicateProductException if product ID already exists.
-     */
-    public void addProduct(Product product) throws DuplicateProductException {
-
-        // check if product with same ID already exists
-        for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getId() == product.getId()) {
-                throw new DuplicateProductException(
-                    "Product with ID " + product.getId() + " already exists!"
-                );
-            }
-        }
-
-        // add product to both ArrayList and HashMap
-        productList.add(product);
-        productMap.put(product.getName().toLowerCase(), product);
-        System.out.println("Product '" + product.getName() + "' added successfully!");
-    }
-
-    // method to display all products in inventory
-    public void displayAllProducts() {
-
-        if (productList.size() == 0) {
-            System.out.println("No products in inventory!");
+    // 2. display all products
+    public void showAllProdcts() {
+        if (prodctList.size() == 0) {
+            System.out.println("Inventory is empty right now.");
             return;
         }
-
-        System.out.println("\n===== ALL PRODUCTS IN INVENTORY =====");
-        for (int i = 0; i < productList.size(); i++) {
-            // calling displayDetails() - polymorphism in action
-            // Java calls Product's version of this method
-            productList.get(i).displayDetails();
+        System.out.println("\n--- Current Inventory ---");
+        for (int i = 0; i < prodctList.size(); i++) {
+            prodctList.get(i).printDetails(); // polymorphism in action
         }
     }
 
-    /*
-     * Method to update stock quantity.
-     * Throws ProductNotFoundException if the product does not exist.
-     */
-    public void updateStock(int productId, int newQuantity) throws ProductNotFoundException {
+    // 3. update stock
+    public void updatStock(int pid, int newStk) throws ProductNotFoundException {
+        Product p = prdMap.get(pid);
+        if (p == null) {
+            throw new ProductNotFoundException("Product with ID " + pid + " does not exist!");
+        }
+        p.setQuanty(newStk);
+        System.out.println("Stock updated successfully!");
+    }
 
-        for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getId() == productId) {
-                productList.get(i).setQuantity(newQuantity);
-                System.out.println("Stock updated successfully!");
-                return;
+    // 4. low stock alert
+    public void checkLowStok() {
+        System.out.println("\n--- Low Stock Alert (Less than 5) ---");
+        boolean anyLow = false;
+        for (int i = 0; i < prodctList.size(); i++) {
+            if (prodctList.get(i).getQuanty() < 5) {
+                prodctList.get(i).printDetails();
+                anyLow = true;
             }
         }
-
-        // product was not found, throw custom exception
-        throw new ProductNotFoundException(
-            "Product with ID " + productId + " not found!"
-        );
+        if (!anyLow) {
+            System.out.println("All items have safe stock level.");
+        }
     }
 
-    /*
-     * DSA IMPLEMENTATION: Bubble Sort
-     * --------------------------------
-     * This method sorts the product list by Product ID in ascending order.
-     * We wrote this sorting algorithm ourselves instead of using Collections.sort().
-     *
-     * HOW BUBBLE SORT WORKS:
-     * - Compare two adjacent products
-     * - If the first one has a bigger ID, swap them
-     * - Repeat until the entire list is sorted
-     * - After each pass, the largest unsorted element "bubbles up" to its correct position
-     */
-    public void sortProductsById() {
+    // 5. invoice generation and billing
+    public void generateInvois(String custmrName, int pid, int buyQty) throws ProductNotFoundException, NotEnoughStockException {
+        Product p = prdMap.get(pid);
+        if (p == null) {
+            throw new ProductNotFoundException("Product ID " + pid + " not found!");
+        }
 
-        int n = productList.size();
+        if (buyQty > p.getQuanty()) {
+            throw new NotEnoughStockException("Only " + p.getQuanty() + " items available in stock!");
+        }
 
+        // deduct quantity from stock
+        p.setQuanty(p.getQuanty() - buyQty);
+        double billAmount = buyQty * p.getItmPrice();
+        totelRevenue = totelRevenue + billAmount;
+
+        // print bill on screen
+        System.out.println("\n======= INVOICE #" + invoiceNum + " =======");
+        System.out.println("Customer Name : " + custmrName);
+        System.out.println("Item Bought   : " + p.getItmName());
+        System.out.println("Rate per item : Rs " + p.getItmPrice());
+        System.out.println("Quantity      : " + buyQty);
+        System.out.println("Total Amount  : Rs " + billAmount);
+        System.out.println("Remaining Stk : " + p.getQuanty());
+        System.out.println("================================");
+
+        // store record for sales report
+        String billRecord = "Inv #" + invoiceNum + " | Customer: " + custmrName + " | Item: " + p.getItmName() + " | Qty: " + buyQty + " | Rs " + billAmount;
+        allInvoics.add(billRecord);
+        invoiceNum++;
+    }
+
+    // 6. sales report
+    public void showSalesRepport() {
+        System.out.println("\n======= SALES REPORT =======");
+        if (allInvoics.size() == 0) {
+            System.out.println("No sales made yet.");
+            return;
+        }
+        for (int i = 0; i < allInvoics.size(); i++) {
+            System.out.println(allInvoics.get(i));
+        }
+        System.out.println("----------------------------");
+        System.out.println("Total Revenue Earned: Rs " + totelRevenue);
+        System.out.println("============================");
+    }
+
+    // 7. DSA: Bubble sort implementation to arrange products by id
+    public void bubbleSortProds() {
+        int n = prodctList.size();
         for (int i = 0; i < n - 1; i++) {
             for (int j = 0; j < n - i - 1; j++) {
-
-                // compare IDs of adjacent products
-                if (productList.get(j).getId() > productList.get(j + 1).getId()) {
-
-                    // swap the two products
-                    Product temp = productList.get(j);
-                    productList.set(j, productList.get(j + 1));
-                    productList.set(j + 1, temp);
+                if (prodctList.get(j).getItmId() > prodctList.get(j + 1).getItmId()) {
+                    // swap items
+                    Product temp = prodctList.get(j);
+                    prodctList.set(j, prodctList.get(j + 1));
+                    prodctList.set(j + 1, temp);
                 }
             }
         }
+        System.out.println("Products sorted by ID using bubble sort!");
     }
 
-    /*
-     * DSA IMPLEMENTATION: Binary Search
-     * -----------------------------------
-     * This method searches for a product by ID using binary search.
-     * Binary search is much faster than checking every product one by one.
-     *
-     * IMPORTANT: The list must be sorted before binary search works!
-     * That is why we call sortProductsById() first.
-     *
-     * HOW BINARY SEARCH WORKS:
-     * - Look at the middle product
-     * - If its ID matches, we found it
-     * - If the target ID is smaller, search the left half
-     * - If the target ID is bigger, search the right half
-     * - Repeat until found or nothing is left
-     *
-     * Throws ProductNotFoundException if product is not found.
-     */
-    public Product binarySearchById(int productId) throws ProductNotFoundException {
-
-        // first sort the list so binary search works correctly
-        sortProductsById();
+    // 8. DSA: Binary search implementation to find product by id
+    public Product binrySearchProd(int targetId) throws ProductNotFoundException {
+        // sort first before binary search
+        bubbleSortProds();
 
         int low = 0;
-        int high = productList.size() - 1;
+        int high = prodctList.size() - 1;
 
         while (low <= high) {
-
             int mid = (low + high) / 2;
-            int midId = productList.get(mid).getId();
+            int curId = prodctList.get(mid).getItmId();
 
-            if (midId == productId) {
-                // found the product!
-                return productList.get(mid);
-
-            } else if (midId < productId) {
-                // target is in the right half
+            if (curId == targetId) {
+                return prodctList.get(mid);
+            } else if (curId < targetId) {
                 low = mid + 1;
-
             } else {
-                // target is in the left half
                 high = mid - 1;
             }
         }
 
-        // product not found, throw custom exception
-        throw new ProductNotFoundException(
-            "Product with ID " + productId + " not found!"
-        );
-    }
-
-    /*
-     * Search product by name using HashMap.
-     * HashMap gives us instant lookup instead of looping through the whole list.
-     * Throws ProductNotFoundException if the name is not found.
-     */
-    public Product searchByName(String name) throws ProductNotFoundException {
-
-        // convert to lowercase for case-insensitive search
-        Product product = productMap.get(name.toLowerCase());
-
-        if (product == null) {
-            throw new ProductNotFoundException(
-                "Product with name '" + name + "' not found!"
-            );
-        }
-
-        return product;
-    }
-
-    // method to display low stock alerts
-    public void lowStockAlert() {
-
-        System.out.println("\n===== LOW STOCK ALERTS =====");
-        System.out.println("Products with quantity less than " + lowStockLimit + ":");
-        System.out.println("---------------------------");
-
-        boolean found = false;
-
-        for (int i = 0; i < productList.size(); i++) {
-            if (productList.get(i).getQuantity() < lowStockLimit) {
-                productList.get(i).displayDetails();
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("All products have sufficient stock!");
-        }
+        // if not found
+        throw new ProductNotFoundException("Product with ID " + targetId + " was not found!");
     }
 }

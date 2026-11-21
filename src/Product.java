@@ -1,47 +1,25 @@
-/*
- * Product class
- * -------------
- * This class represents a single product in the inventory.
- * It EXTENDS the Item class (Inheritance) and provides its own
- * version of displayDetails() (Polymorphism).
- *
- * OOP Concepts used:
- * - INHERITANCE: Product extends Item (gets id, name, price from Item)
- * - ENCAPSULATION: quantity is private, accessed only through getters/setters
- * - POLYMORPHISM: displayDetails() is overridden from Item class
- */
+// Team F: Product child class
+// Product inherits from Item (Inheritance)
+
 public class Product extends Item {
+    private int quanty; // stock quantity of product
 
-    // private field - only this class can access it directly (encapsulation)
-    private int quantity;
-
-    // constructor - calls parent constructor using super() for id, name, price
-    public Product(int productId, String productName, double price, int quantity) {
-        super(productId, productName, price);  // calling Item's constructor
-        this.quantity = quantity;
+    public Product(int pId, String pName, double pPrce, int qnty) {
+        super(pId, pName, pPrce);
+        this.quanty = qnty;
     }
 
-    // getter for quantity
-    public int getQuantity() {
-        return quantity;
+    public int getQuanty() {
+        return quanty;
     }
 
-    // setter for quantity
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQuanty(int quanty) {
+        this.quanty = quanty;
     }
 
-    /*
-     * POLYMORPHISM - this method overrides the abstract method from Item class.
-     * The @Override annotation tells Java that we are providing our own version
-     * of a method that was declared in the parent class.
-     */
+    // overriding parent method (polymorphism)
     @Override
-    public void displayDetails() {
-        System.out.println("Product ID   : " + getId());
-        System.out.println("Product Name : " + getName());
-        System.out.println("Price        : Rs. " + getPrice());
-        System.out.println("Quantity     : " + quantity);
-        System.out.println("---------------------------");
+    public void printDetails() {
+        System.out.println("ID: " + getItmId() + " | Name: " + getItmName() + " | Price: Rs " + getItmPrice() + " | Stock: " + quanty);
     }
 }

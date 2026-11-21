@@ -1,68 +1,32 @@
-# Inventory and Billing System
+# Team F - Inventory and Billing System
 
-A simple Java console-based application for managing inventory and billing.
+High school Java project for inventory control and billing counter.
 
-## Features
-1. **Add Products and Manage Stock** - Add new products with ID, name, price, and quantity. Update stock levels anytime.
-2. **Low Stock Alerts** - View products that have quantity below 5 units.
-3. **Search Products** - Search for any product using its unique Product ID (Binary Search) or by name (HashMap lookup).
+## Features Included
+1. Stock management (Add new products, update quantity, show all items)
+2. Low-stock alerts (Checks if item count is less than 5)
+3. Invoice generation (Customer billing with price calculation and automatic stock reduction)
+4. Sales reports (List of past bills and total money made)
 
-## OOP Concepts Used
-- **Encapsulation** - All fields are private. Access is only through getter and setter methods.
-- **Inheritance** - Product class extends the abstract Item class.
-- **Abstraction** - Item is an abstract class with an abstract method displayDetails().
-- **Polymorphism** - Product overrides the displayDetails() method from Item class.
+## Project Requirements
+- **OOP Concepts**:
+  - Abstraction: `Item` is an abstract class with `printDetails()`.
+  - Inheritance: `Product` extends `Item`.
+  - Encapsulation: Private variables accessed using getters/setters.
+  - Polymorphism: `@Override` on `printDetails()` method.
+- **Custom Exceptions**:
+  - `ProductNotFoundException` (if product id is wrong)
+  - `NotEnoughStockException` (if customer tries to buy more than we have)
+- **DSA Implementation**:
+  - Bubble sort to arrange products by ID.
+  - Binary search to search product by ID.
+- **Collections Framework**:
+  - `ArrayList` for storing products and bill records.
+  - `HashMap` for fast ID to product lookup.
 
-## Custom Exceptions
-- **ProductNotFoundException** - Thrown when a product is not found during search or update.
-- **DuplicateProductException** - Thrown when trying to add a product with an existing ID.
-
-## DSA Implementation
-- **Bubble Sort** - Custom sorting algorithm to sort products by Product ID.
-- **Binary Search** - Custom search algorithm to find products by ID efficiently.
-
-## Collections Used
-- **ArrayList** - To store all products in order.
-- **HashMap** - For quick product lookup by name.
-
-## How to Run
-
-1. Open terminal and go to the `src` folder:
-   ```
-   cd src
-   ```
-
-2. Compile all Java files:
-   ```
-   javac Item.java Product.java ProductNotFoundException.java DuplicateProductException.java Inventory.java Main.java
-   ```
-
-3. Run the program:
-   ```
-   java Main
-   ```
-
-## Menu Options
-| Option | Description |
-|--------|-------------|
-| 1 | Add a new product (enter ID, name, price, quantity) |
-| 2 | Display all products in inventory |
-| 3 | Update stock quantity of an existing product |
-| 4 | Search for a product by ID (uses Binary Search) |
-| 5 | Search for a product by Name (uses HashMap) |
-| 6 | View low stock alerts (products with quantity < 5) |
-| 7 | Sort all products by ID (uses Bubble Sort) |
-| 8 | Exit the program |
-
-## Project Structure
-```
-Inventory-and-Billing/
-├── README.md
-└── src/
-    ├── Item.java                        - Abstract base class (Abstraction)
-    ├── Product.java                     - Product class (Inheritance, Polymorphism)
-    ├── Inventory.java                   - Inventory management (Bubble Sort, Binary Search, HashMap)
-    ├── ProductNotFoundException.java    - Custom exception for missing products
-    ├── DuplicateProductException.java   - Custom exception for duplicate IDs
-    └── Main.java                        - Main class with menu and exception handling
+## How to Compile and Run
+```bash
+cd src
+javac Item.java Product.java ProductNotFoundException.java NotEnoughStockException.java Inventory.java Main.java
+java Main
 ```

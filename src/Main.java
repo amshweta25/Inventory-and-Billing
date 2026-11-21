@@ -1,192 +1,172 @@
+// Team F: Main class for running the console application
+// Simple menu-driven program for high school project
+
 import java.util.Scanner;
 
-/*
- * Main class
- * ----------
- * This is the entry point of the Inventory and Billing System.
- * It shows a menu to the user and calls the appropriate methods.
- *
- * All custom exceptions are caught here using try-catch blocks.
- */
 public class Main {
-
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Inventory myInv = new Inventory();
 
-        // create scanner to read user input from keyboard
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("******************************************");
+        System.out.println("   TEAM F: INVENTORY & BILLING SYSTEM");
+        System.out.println("******************************************");
 
-        // create inventory object to manage products
-        Inventory inventory = new Inventory();
+        boolean keepRunning = true;
 
-        // welcome message
-        System.out.println("==========================================");
-        System.out.println("    INVENTORY AND BILLING SYSTEM");
-        System.out.println("==========================================");
-        System.out.println("Welcome! Use the menu below to manage");
-        System.out.println("your inventory.");
-
-        boolean running = true;
-
-        // main menu loop - keeps running until user chooses to exit
-        while (running) {
-
-            // show menu options
-            System.out.println("\n------------ MAIN MENU ------------");
+        while (keepRunning) {
+            System.out.println("\n--- MENU OPTIONS ---");
             System.out.println("1. Add New Product");
             System.out.println("2. Display All Products");
             System.out.println("3. Update Stock");
-            System.out.println("4. Search Product by ID");
-            System.out.println("5. Search Product by Name");
-            System.out.println("6. Low Stock Alerts");
-            System.out.println("7. Sort Products by ID");
-            System.out.println("8. Exit");
-            System.out.print("Enter your choice (1-8): ");
+            System.out.println("4. Search Product by ID (Binary Search)");
+            System.out.println("5. Check Low Stock Alerts");
+            System.out.println("6. Generate Invoice (Billing)");
+            System.out.println("7. View Sales Report");
+            System.out.println("8. Sort Products by ID (Bubble Sort)");
+            System.out.println("9. Exit");
+            System.out.print("Enter your choise (1-9): ");
 
-            // read user choice with input validation
-            int choice;
+            int userChoise = 0;
             try {
-                choice = scanner.nextInt();
+                userChoise = sc.nextInt();
             } catch (Exception e) {
-                System.out.println("Please enter a valid number!");
-                scanner.nextLine();
+                System.out.println("Invalid input! Please enter a number.");
+                sc.nextLine();
                 continue;
             }
 
-            // handle user choice
-            switch (choice) {
-
+            switch (userChoise) {
                 case 1:
-                    // --- ADD NEW PRODUCT ---
+                    // add product
                     try {
                         System.out.print("Enter Product ID: ");
-                        int id = scanner.nextInt();
-                        scanner.nextLine();
+                        int pid = sc.nextInt();
+                        sc.nextLine(); // clear line
 
                         System.out.print("Enter Product Name: ");
-                        String name = scanner.nextLine();
+                        String pname = sc.nextLine();
 
                         System.out.print("Enter Price: ");
-                        double price = scanner.nextDouble();
+                        double prc = sc.nextDouble();
 
                         System.out.print("Enter Quantity: ");
-                        int qty = scanner.nextInt();
+                        int qnty = sc.nextInt();
 
-                        // validate that values are positive
-                        if (id <= 0 || price < 0 || qty < 0) {
-                            System.out.println("Error: Please enter positive values!");
+                        if (pid <= 0 || prc <= 0 || qnty < 0) {
+                            System.out.println("Error: Negative or zero values not allowed!");
                             break;
                         }
 
-                        // create product and add to inventory
-                        Product newProduct = new Product(id, name, price, qty);
-                        inventory.addProduct(newProduct);
-
-                    } catch (DuplicateProductException e) {
-                        // our custom exception - product ID already exists
-                        System.out.println("Error: " + e.getMessage());
-
+                        Product newP = new Product(pid, pname, prc, qnty);
+                        myInv.addProdct(newP);
                     } catch (Exception e) {
-                        System.out.println("Invalid input! Please try again.");
-                        scanner.nextLine();
+                        System.out.println("Wrong input given! Try again.");
+                        sc.nextLine();
                     }
                     break;
 
                 case 2:
-                    // --- DISPLAY ALL PRODUCTS ---
-                    inventory.displayAllProducts();
+                    // display all
+                    myInv.showAllProdcts();
                     break;
 
                 case 3:
-                    // --- UPDATE STOCK ---
+                    // update stock
                     try {
                         System.out.print("Enter Product ID to update: ");
-                        int updateId = scanner.nextInt();
+                        int upId = sc.nextInt();
 
-                        System.out.print("Enter new quantity: ");
-                        int newQty = scanner.nextInt();
+                        System.out.print("Enter New Quantity: ");
+                        int newQ = sc.nextInt();
 
-                        if (newQty < 0) {
-                            System.out.println("Error: Quantity cannot be negative!");
+                        if (newQ < 0) {
+                            System.out.println("Quantity cannot be negative!");
                             break;
                         }
 
-                        inventory.updateStock(updateId, newQty);
-
+                        myInv.updatStock(upId, newQ);
                     } catch (ProductNotFoundException e) {
-                        // our custom exception - product not found
-                        System.out.println("Error: " + e.getMessage());
-
+                        System.out.println("Custom Exception: " + e.getMessage());
                     } catch (Exception e) {
-                        System.out.println("Invalid input! Please try again.");
-                        scanner.nextLine();
+                        System.out.println("Invalid input!");
+                        sc.nextLine();
                     }
                     break;
 
                 case 4:
-                    // --- SEARCH PRODUCT BY ID (uses Binary Search) ---
+                    // binary search product
                     try {
                         System.out.print("Enter Product ID to search: ");
-                        int searchId = scanner.nextInt();
+                        int srchId = sc.nextInt();
 
-                        // uses our binary search algorithm
-                        Product found = inventory.binarySearchById(searchId);
-                        System.out.println("\n===== PRODUCT FOUND =====");
-                        found.displayDetails();
-
+                        Product found = myInv.binrySearchProd(srchId);
+                        System.out.println("\nProduct Found:");
+                        found.printDetails();
                     } catch (ProductNotFoundException e) {
-                        // our custom exception - product not found
-                        System.out.println("Error: " + e.getMessage());
-
+                        System.out.println("Custom Exception: " + e.getMessage());
                     } catch (Exception e) {
-                        System.out.println("Invalid input! Please try again.");
-                        scanner.nextLine();
+                        System.out.println("Invalid input!");
+                        sc.nextLine();
                     }
                     break;
 
                 case 5:
-                    // --- SEARCH PRODUCT BY NAME (uses HashMap) ---
-                    try {
-                        scanner.nextLine();
-                        System.out.print("Enter Product Name to search: ");
-                        String searchName = scanner.nextLine();
-
-                        // uses HashMap for quick lookup
-                        Product result = inventory.searchByName(searchName);
-                        System.out.println("\n===== PRODUCT FOUND =====");
-                        result.displayDetails();
-
-                    } catch (ProductNotFoundException e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
+                    // low stock alert
+                    myInv.checkLowStok();
                     break;
 
                 case 6:
-                    // --- LOW STOCK ALERTS ---
-                    inventory.lowStockAlert();
+                    // generate invoice (billing)
+                    try {
+                        sc.nextLine();
+                        System.out.print("Enter Customer Name: ");
+                        String cName = sc.nextLine();
+
+                        System.out.print("Enter Product ID to buy: ");
+                        int buyId = sc.nextInt();
+
+                        System.out.print("Enter Quantity to buy: ");
+                        int buyQ = sc.nextInt();
+
+                        if (buyQ <= 0) {
+                            System.out.println("Buying quantity must be greater than 0!");
+                            break;
+                        }
+
+                        myInv.generateInvois(cName, buyId, buyQ);
+                    } catch (ProductNotFoundException e) {
+                        System.out.println("Custom Exception: " + e.getMessage());
+                    } catch (NotEnoughStockException e) {
+                        System.out.println("Custom Exception: " + e.getMessage());
+                    } catch (Exception e) {
+                        System.out.println("Billing error: Invalid input.");
+                        sc.nextLine();
+                    }
                     break;
 
                 case 7:
-                    // --- SORT PRODUCTS BY ID (uses Bubble Sort) ---
-                    inventory.sortProductsById();
-                    System.out.println("Products sorted by ID successfully!");
-                    inventory.displayAllProducts();
+                    // sales report
+                    myInv.showSalesRepport();
                     break;
 
                 case 8:
-                    // --- EXIT ---
-                    running = false;
-                    System.out.println("\n==========================================");
-                    System.out.println("  Thank you for using the system!");
-                    System.out.println("  Goodbye!");
-                    System.out.println("==========================================");
+                    // bubble sort
+                    myInv.bubbleSortProds();
+                    myInv.showAllProdcts();
+                    break;
+
+                case 9:
+                    // exit
+                    keepRunning = false;
+                    System.out.println("\nThank you for using Team F System. Goodbye!");
                     break;
 
                 default:
-                    System.out.println("Invalid choice! Please enter 1-8.");
+                    System.out.println("Please choose between 1 to 9.");
             }
         }
 
-        // close scanner to prevent resource leak
-        scanner.close();
+        sc.close();
     }
 }
