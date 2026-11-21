@@ -1,52 +1,47 @@
-// Product class - stores information about a single product
-public class Product {
+/*
+ * Product class
+ * -------------
+ * This class represents a single product in the inventory.
+ * It EXTENDS the Item class (Inheritance) and provides its own
+ * version of displayDetails() (Polymorphism).
+ *
+ * OOP Concepts used:
+ * - INHERITANCE: Product extends Item (gets id, name, price from Item)
+ * - ENCAPSULATION: quantity is private, accessed only through getters/setters
+ * - POLYMORPHISM: displayDetails() is overridden from Item class
+ */
+public class Product extends Item {
 
-    // fields to store product details
-    int productId;
-    String productName;
-    double price;
-    int quantity;
+    // private field - only this class can access it directly (encapsulation)
+    private int quantity;
 
-    // constructor to create a new product
+    // constructor - calls parent constructor using super() for id, name, price
     public Product(int productId, String productName, double price, int quantity) {
-        this.productId = productId;
-        this.productName = productName;
-        this.price = price;
+        super(productId, productName, price);  // calling Item's constructor
         this.quantity = quantity;
     }
 
-    // getter methods - used to access product details
-    public int getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
+    // getter for quantity
     public int getQuantity() {
         return quantity;
     }
 
-    // setter methods - used to update product details
+    // setter for quantity
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    // display product details in a nice format
-    public void displayProduct() {
-        System.out.println("Product ID: " + productId);
-        System.out.println("Name: " + productName);
-        System.out.println("Price: Rs. " + price);
-        System.out.println("Quantity: " + quantity);
+    /*
+     * POLYMORPHISM - this method overrides the abstract method from Item class.
+     * The @Override annotation tells Java that we are providing our own version
+     * of a method that was declared in the parent class.
+     */
+    @Override
+    public void displayDetails() {
+        System.out.println("Product ID   : " + getId());
+        System.out.println("Product Name : " + getName());
+        System.out.println("Price        : Rs. " + getPrice());
+        System.out.println("Quantity     : " + quantity);
         System.out.println("---------------------------");
     }
 }
