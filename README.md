@@ -1,6 +1,6 @@
 # Team F - Inventory and Billing System
 
-High school Java project for inventory control and billing counter.
+Java project for inventory control and billing counter.
 
 ## Features Included
 1. Stock management (Add new products, update quantity, show all items)
